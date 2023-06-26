@@ -1,0 +1,27 @@
+PACKAGES=libc libcompiler_rt libbase libfatfs liblitespi liblitedram libliteeth liblitesdcard liblitesata bios
+PACKAGE_DIRS=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libc /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libcompiler_rt /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libbase /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libfatfs /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitespi /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitedram /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libliteeth /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitesdcard /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitesata /home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/bios
+LIBS=libc libcompiler_rt libbase libfatfs liblitespi liblitedram libliteeth liblitesdcard liblitesata
+TRIPLE=lm32-elf
+CPU=lm32
+CPUFAMILY=lm32
+CPUFLAGS=-mbarrel-shift-enabled -mmultiply-enabled -mdivide-enabled -msign-extend-enabled -D__lm32__ 
+CPUENDIANNESS=big
+CLANG=0
+CPU_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/cores/cpu/lm32
+SOC_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc
+PICOLIBC_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/pythondata-software-picolibc/pythondata_software_picolibc/data
+COMPILER_RT_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/pythondata-software-compiler_rt/pythondata_software_compiler_rt/data
+export BUILDINC_DIRECTORY
+BUILDINC_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/Proyectos/Circuitos/Repositorio/SoC_Display/build/software/include
+LIBC_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libc
+LIBCOMPILER_RT_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libcompiler_rt
+LIBBASE_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libbase
+LIBFATFS_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libfatfs
+LIBLITESPI_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitespi
+LIBLITEDRAM_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitedram
+LIBLITEETH_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/libliteeth
+LIBLITESDCARD_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitesdcard
+LIBLITESATA_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/liblitesata
+BIOS_DIRECTORY=/home/esteban/DiscoDuro2/Unal/Digitales_2/litex/litex/litex/soc/software/bios
+LTO=0
+BIOS_CONSOLE_FULL=1
