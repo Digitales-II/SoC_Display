@@ -1,4 +1,4 @@
-# *************************************************
+# *****************
 # IMPORTANTE PARA PODER COMPILAR ESTE EJEMPLO:
 # En el aechivo:litex/litex/soc/software/common.mak
 # cambiar de:
@@ -7,7 +7,7 @@
 # endif
 # a:
 # COMMONFLAGS += -flto
-# *************************************************
+# *****************
 BUILD_DIR=../build/
 SOC_DIRECTORY=../../../../litex/litex/litex/soc/
 include $(BUILD_DIR)/software/include/generated/variables.mak
@@ -42,5 +42,5 @@ crt0.o: $(CPU_DIRECTORY)/crt0.S
 %.o: %.S
 	$(assemble)
 clean:
-	$(RM) $(OBJECTS) *.elf *.bin .*~ *~ *.map *.d
+	$(RM) $(OBJECTS) .elf *.bin .~ *~ *.map *.d
 .PHONY: clean
