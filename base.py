@@ -35,6 +35,10 @@ _pantalla = [
         Subsignal("o_data_r2", Pins("T3 P5")),
         Subsignal("o_data_g2", Pins("R4 N6")),
         Subsignal("o_data_b2", Pins("M5 N7")),
+        
+        Subsignal("o_data_r3", Pins("L4 R2")),
+        Subsignal("o_data_g3", Pins("L5 T2")),
+        Subsignal("o_data_b3", Pins("P2 R3")),
         IOStandard("LVCMOS33")
      ),
 ]

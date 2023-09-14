@@ -1,119 +1,117 @@
 #include <stdio.h>
+#include <time.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <irq.h>
 #include <uart.h>
 #include <console.h>
 #include <generated/csr.h>
-static char *readstr(void)
+
+char dataPixel[21]= "";
+char data;
+long long int integerValue;
+int direccion = 0;
+int contador = 0;
+int changeRam = 0;
+int i = 0;
+char past_read = 0;
+char readm = 0;
+
+
+void my_busy_wait(unsigned int ms)
 {
-	char c[2];
-	static char s[64];
-	static int ptr = 0;
-	if(readchar_nonblock()) {
-		c[0] = readchar();
-		c[1] = 0;
-		switch(c[0]) {
-			case 0x7f:
-			case 0x08:
-				if(ptr > 0) {
-					ptr--;
-					putsnonl("\x08 \x08");
-				}
-				break;
-			case 0x07:
-				break;
-			case '\r':
-			case '\n':
-				s[ptr] = 0x00;
-				putsnonl("\n");
-				ptr = 0;
-				return s;
-			default:
-				if(ptr >= (sizeof(s) - 1))
-					break;
-				putsnonl(c);
-				s[ptr] = c[0];
-				ptr++;
-				break;
-		}
-	}
-	return NULL;
+	timer0_en_write(0);
+	timer0_reload_write(0);
+	timer0_load_write(CONFIG_CLOCK_FREQUENCY/1000*ms);
+	timer0_en_write(1);
+	timer0_update_value_write(1);
+	while(timer0_value_read()) timer0_update_value_write(1);
 }
-static char *get_token(char **str)
+
+void clean_memories()
 {
-	char *c, *d;
-	c = (char *)strchr(*str, ' ');
-	if(c == NULL) {
-		d = *str;
-		*str = *str+strlen(*str);
-		return d;
-	}
-	*c = 0;
-	d = *str;
-	*str = c+1;
-	return d;
+	for (int dir = 0; dir < 3200; dir++)
+	{
+		pantalla_addrWrite_write(dir);
+		pantalla_wr_write(1);
+		pantalla_dataLine1_write(0);
+		pantalla_wr_write(0);
+		pantalla_dataLine2_write(0);
+	}	
 }
-static void prompt(void)
-{
-	printf("RUNTIME>");
-}
-static void help(void)
-{
-	puts("Available commands:");
-	puts("help                            - this command");
-	puts("reboot                          - reboot CPU");
-	puts("led                             - led test");
-	puts("leds-on                            - leds test");
-	puts("leds-off                            - leds test");
-}
-static void reboot(void)
-{
-	ctrl_reset_write(1);
-}
-static void leds(int status)
-{
-   leds_out_write(status);
-}
- static void led_test(void) 
- { 
- 	int i;
- 	printf("led_test...\n");
- 	for(i=0; i<10; i++) {
- 		leds_out_write(i);
- 		busy_wait(250);
- 	    printf("led_test... %d \n", i);
- 	}
-} 
-static void console_service(void)
-{
-	char *str;
-	char *token;
-	str = readstr();
-	if(str == NULL) return;
-	token = get_token(&str);
-	if(strcmp(token, "help") == 0)
-		help();
-	else if(strcmp(token, "reboot") == 0)
-		reboot();
-	else if(strcmp(token, "led") == 0)
-	 	led_test();		
-	else if(strcmp(token, "leds-on") == 0)
-		leds(2);   // 1 0
-	else if(strcmp(token, "leds-off") == 0)
-		leds(1);   // 0 1
-	prompt();
-}
+
 int main(void)
 {
 	irq_setmask(0);
 	irq_setie(1);
 	uart_init();
-	puts("\nCPU testing cain_test SoC\n");
-	help();
-	prompt();
+	puts("\nCPU testing PANTALLA SoC\n");
+	printf("Hola Mundo \n");
+	
 	while(1) {
-		console_service();
+		// Obtencion dato serial
+   		while(1){
+			data = uart_read();
+			if (data >= '0' && data <= '9')
+			{
+				dataPixel[i]=data;
+				i++;
+			} else 
+			{
+				dataPixel[i]='\0'; // Finalizacion de linea
+				break;
+			}
+		}
+
+		i = 0;
+		integerValue = atoll(dataPixel); // Pasar string a long long int
+		pantalla_enable_write(1); // Prender pantalla
+	   	pantalla_RamTime_write(2*41250000); // = 25M/(2*1/3.3seg) 
+	   	//pantalla_RamTime_write(2*50000000); // = 25M/(2*1/4seg) 
+		
+		if (direccion == 3200) { // Reseteo de direccion
+			direccion = 0;
+		}
+		pantalla_addrWrite_write(direccion);
+		//printf("Direccion: %d,Entero: %lld\n ", direccion,integerValue);
+		direccion = direccion + 1; //Incremento de direccion
+		
+
+		//Switcheo de RAM
+		if (contador <= 3200) {
+			contador++;
+		} else {
+			contador = 0;
+			//printf("\nantes\n");
+			//readm = pantalla_requireData_read();
+			//past_read = readm;
+			while (past_read == readm) {
+				past_read = readm;
+				readm = pantalla_requireData_read();
+			}
+			//printf("dddddddddddddddd");
+			/*for (char intento = 0; intento < 5; intento++)
+			{
+				uart_write(100);
+			}
+			//uart_write(100);*/
+			if (changeRam == 0) 
+			{
+				changeRam = 1;
+			} else 
+			{
+				changeRam = 0;
+			}
+		}
+
+		//Switcheo de RAM
+		if (changeRam == 1){
+			pantalla_wr_write(1);
+			pantalla_dataLine1_write(integerValue);
+		} else {
+			pantalla_wr_write(0);
+			pantalla_dataLine2_write(integerValue);
+		}
 	}
-	return 0;
 }

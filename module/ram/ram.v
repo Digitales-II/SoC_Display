@@ -4,13 +4,13 @@ module ram #(parameter IMAGEN = "imagen1.txt")(
     // Lectura
     input wire rd,
     input [11:0] addrRead,
-    output reg [35:0] o_valor,
+    output reg [53:0] o_valor,
     // Escritura
     input wire wr,
     input [11:0] addrWrite,
-    input [35:0] dataLine
+    input [53:0] dataLine
 );
-    reg [35:0] ext_mem [3200:0];
+    reg [53:0] ext_mem [3200:0];
 
     initial begin
         $readmemb(IMAGEN,ext_mem);

@@ -17,14 +17,17 @@ class PANTALLA(Module,AutoCSR):
       self.o_data_r2 = pads.o_data_r2
       self.o_data_g2 = pads.o_data_g2
       self.o_data_b2 = pads.o_data_b2
+      self.o_data_r3 = pads.o_data_r3
+      self.o_data_g3 = pads.o_data_g3
+      self.o_data_b3 = pads.o_data_b3
       self.o_row_select = pads.o_row_select
 
 
    # Registros solo escritura       
       self.enable       = CSRStorage(1)
       self.wr           = CSRStorage(1)
-      self.dataLine1    = CSRStorage(36)
-      self.dataLine2    = CSRStorage(36)
+      self.dataLine1    = CSRStorage(54)
+      self.dataLine2    = CSRStorage(54)
       self.addrWrite    = CSRStorage(12)
       self.RamTime      = CSRStorage(30)
 
@@ -51,6 +54,9 @@ class PANTALLA(Module,AutoCSR):
             o_o_data_r2    = self.o_data_r2,
             o_o_data_g2    = self.o_data_g2,
             o_o_data_b2    = self.o_data_b2,
+            o_o_data_r3    = self.o_data_r3,
+            o_o_data_g3    = self.o_data_g3,
+            o_o_data_b3    = self.o_data_b3,
 	         o_o_row_select = self.o_row_select,
 	   )	   
       

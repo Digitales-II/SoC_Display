@@ -15,14 +15,18 @@ module led_control(
     output reg [1:0] o_data_r2,
     output reg [1:0] o_data_g2,
     output reg [1:0] o_data_b2,
+
+    output reg [1:0] o_data_r3,
+    output reg [1:0] o_data_g3,
+    output reg [1:0] o_data_b3,
     // Inputs to the row select demux
     output reg [4:0] o_row_select,
 
     output led,
     output requireData,
     input wr,
-    input [35:0] dataLine1,
-    input [35:0] dataLine2,
+    input [53:0] dataLine1,
+    input [53:0] dataLine2,
     input [11:0] addrWrite,
     input [29:0] RamTime
 );
@@ -50,9 +54,9 @@ module led_control(
     reg ram1Select;
     reg ram2Select;
     reg [11:0] addrRead;
-    wire [35:0] data1;
-    wire [35:0] data2;
-    wire [35:0] data;
+    wire [53:0] data1;
+    wire [53:0] data2;
+    wire [53:0] data;
 
     // registros de activacion de los pines RGB de HUB75
     reg [1:0] data_r = 0;
@@ -62,6 +66,10 @@ module led_control(
     reg [1:0] data_r2 = 0;
     reg [1:0] data_g2 = 0;
     reg [1:0] data_b2 = 0;
+
+    reg [1:0] data_r3 = 0;
+    reg [1:0] data_g3 = 0;
+    reg [1:0] data_b3 = 0;
 
     //Registro del selector de columnas
     reg [4:0] w_o_row_select =0;
@@ -103,6 +111,14 @@ module led_control(
     reg [3:0] dataPixelG4=0;
     reg [3:0] dataPixelB4=0;
 
+    reg [3:0] dataPixelR5=0;
+    reg [3:0] dataPixelG5=0;
+    reg [3:0] dataPixelB5=0;
+
+    reg [3:0] dataPixelR6=0;
+    reg [3:0] dataPixelG6=0;
+    reg [3:0] dataPixelB6=0;
+
     reg [30:0] count3;
     reg cleanColumns=1;
 
@@ -114,6 +130,10 @@ module led_control(
     assign o_data_r2 = data_r2;
     assign o_data_g2 = data_g2;
     assign o_data_b2 = data_b2;
+
+    assign o_data_r3 = data_r3;
+    assign o_data_g3 = data_g3;
+    assign o_data_b3 = data_b3;
 
     //asginacion de la señal de seleccion de salida
     assign o_row_select = w_o_row_select;
@@ -193,6 +213,15 @@ always @(posedge i_clk) begin
             dataPixelG4=data[23:21];
             dataPixelB4=data[20:18];
 
+            dataPixelR5=data[53:51];
+            dataPixelG5=data[50:48];
+            dataPixelB5=data[47:45];
+
+            dataPixelR6=data[44:42];
+            dataPixelG6=data[41:39];
+            dataPixelB6=data[38:36];
+
+
             if (pixels_to_shift != pixels_per_row ) begin
                 if (o_data_clock == 1) begin
 
@@ -210,6 +239,13 @@ always @(posedge i_clk) begin
                     blue_register3   = (counter<=dataPixelB3) ? 1'b1 : 1'b0; 
                     blue_register4  = (counter<=dataPixelB4) ? 1'b1 : 1'b0;
 
+                    red_register5   = (counter<=dataPixelR5) ? 1'b1 : 1'b0; 
+                    red_register6   = (counter<=dataPixelR6) ? 1'b1 : 1'b0; 
+                    green_register5  = (counter<=dataPixelG5) ? 1'b1 : 1'b0; 
+                    green_register6 = (counter<=dataPixelG6) ? 1'b1 : 1'b0; 
+                    blue_register5   = (counter<=dataPixelB5) ? 1'b1 : 1'b0; 
+                    blue_register6  = (counter<=dataPixelB6) ? 1'b1 : 1'b0;
+
                     data_r <= { red_register2, red_register}; 
                     data_g <= { green_register2, green_register}; 
                     data_b <= { blue_register2, blue_register}; 
@@ -217,6 +253,10 @@ always @(posedge i_clk) begin
                     data_r2 <= { red_register4, red_register3}; 
                     data_g2 <= { green_register4, green_register3}; 
                     data_b2 <= { blue_register4, blue_register3}; 
+
+                    data_r3 <= { red_register6, red_register5}; 
+                    data_g3 <= { green_register6, green_register5}; 
+                    data_b3 <= { blue_register6, blue_register5};
 
                     o_data_clock <= 0;
                 end else begin
